@@ -7,7 +7,7 @@ class LLMHandler:
     def __init__(self, model="llama-3.3-70b-versatile"):
         self.client = None
         # self.api_key = os.getenv("GROQ_API_KEY")
-        self.api_key = "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"
+        self.api_key = "insert_groq_key_here"
         self.model = model
 
     def initialize_llm(self) -> None:
