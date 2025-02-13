@@ -6,12 +6,36 @@ from groq_utils_modular import LLMHandler
 # - information about a transaction done or to be done
 # - questions related to planning for transaction execution
 
-CLASSIFICATION_INSTRUCTIONS = """Instruction: You are a supervisor tasked with managing the chat messages with queries about Fixed Income instruments, an AI assistant. Your task is to classify the incoming questions. Depending on your answer, which needs to be a single word, question will be routed to the right team, so your task is crucial for our team. There are two possible question types:
-1. QuoteRequest 
-- questions related to price, bid, offer for a given Fixed Income security
+# Improved Prompts on 10th Feb
+CLASSIFICATION_INSTRUCTIONS = """ Instruction: You are a supervisor managing chat messages related to Fixed Income instruments. Your task is to classify each message based on intent and not based on some word in the message, ensuring accurate routing.
 
-2. General
-- general questions"""
+There are three possible categories:
+
+      BidRequest – The user is looking to buy or is asking for a bid price.
+        Examples:
+            "Any offers for XYZ bond?"
+            "Looking to buy XYZ, any sellers?"
+            "What’s your offer on XYZ?"
+	        "Need offers XYZ, what’s available?"
+	        "What’s the lowest ask?"
+	        "let me know what’s on offer."
+	        "Anyone selling XYZ bonds? Looking at 5.5% yield."
+
+    OfferRequest – The user is looking to sell or is asking for an offer price.
+        Examples:
+            "Selling XYZ bond, any bid?"
+            "Any takers for XYZ at 5.2% yield?"
+	        "available at 4.8% yield, any takers?"
+	        "Looking to sell AAA-rated bonds, send your bids."
+	        "treasury bonds, who wants in?"
+            "Offloading XYZ, who’s interested?
+            
+
+    General – If the intent is unclear, classify as "general" instead of making assumptions. 
+    
+    Respond with only one word: "BidRequest", "OfferRequest", or "General"
+    
+    """
 
 def classify_query(llm, user_input):
     messages = [

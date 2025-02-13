@@ -13,19 +13,17 @@ class BondDataExtractor:
         prompt = """Please extract bond details from the following text and provide them in a strict JSON format according to these rules:
 
 1. Return ONLY a valid JSON object, nothing else
-2. Extract the values for ISIN, security detail(info), issuer, Coupon, Maturity, Quantam(QTM), bid, offer for each bond.
-3. Check if the request is to buy or sell. Return bid_offer as true if bidding and false otherwise. 
-4. Include all these fields (use null if not found):
-   - isinNo (string)
-   - issuerName (string)
-   - coupon (number)
-   - rating (string)
-   - tenor (number)
-   - quantam (number)
-   - ytm (number)
-   - bid_offer (boolean)
-   - business_sector (string)
-   - maturityDate (date)
+2. Extract the values for ISIN, security detail(info), issuer, Coupon, Maturity, Quantam(QTM), offer for each bond.
+3. Include all these fields (use null if not found): 
+    - isinNo (Unique 12-character alphanumeric string - e.g., 'US1234567890')
+    - issuerName (string)
+    - coupon (Number followed by %)
+    - rating (string)
+    - tenor (number)
+    - quantam (Number in Lakh or Lac or L - e.g., 500000 for 5 Lakh/Lac/L, 5000000 for 50 Lakh)/Lac/L)
+    - ytm (Number followed by %)
+    - business_sector (Industry Name - Determine the sector this business operates in, such as "Microfinance", "Power & Energy", "Fintech", or "Retail". Example: "HDFC Bank" → "Banking & Financial Services")
+    - maturityDate (Format - dd/mm/yyyy)
 
 Input text: {text}
 
@@ -40,7 +38,7 @@ Respond with ONLY the JSON object, no additional text or formatting."""
             response = self.llm.get_response(messages)
             
             # Debug print
-            print("Raw LLM response:", response)
+            # print("Raw LLM response:", response)
             
             # Clean the response
             response = response.strip()
@@ -81,7 +79,6 @@ Respond with ONLY the JSON object, no additional text or formatting."""
             "tenor": None,
             "quantam": None,
             "ytm": None,
-            "bid_offer": None,
             "business_sector": None,
             "maturityDate": None
         }
@@ -106,10 +103,10 @@ Respond with ONLY the JSON object, no additional text or formatting."""
         if quantam_match:
             bond_data["quantam"] = int(quantam_match.group(1))
 
-        # Extract bid/offer
-        bid_match = re.search(r"Bidding at (\d{1,2}\.\d{1,2})%", message)
-        if bid_match:
-            bond_data["bid_offer"] = float(bid_match.group(1))
+        # # Extract bid/offer
+        # bid_match = re.search(r"Bidding at (\d{1,2}\.\d{1,2})%", message)
+        # if bid_match:
+        #     bond_data["bid_offer"] = float(bid_match.group(1))
 
         # Extract maturity date
         maturity_match = re.search(r"(\d{2}[A-Z]{2}\d{2})", message)
