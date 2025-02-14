@@ -22,7 +22,7 @@ class BondDataExtractor:
     - tenor (number)
     - quantam (Number in Lakh or Lac or L - e.g., 500000 for 5 Lakh/Lac/L, 5000000 for 50 Lakh)/Lac/L)
     - ytm (Number followed by %)
-    - business_sector (Industry Name - Determine the sector this business operates in, such as "Microfinance", "Power & Energy", "Fintech", or "Retail". Example: "HDFC Bank" → "Banking & Financial Services")
+    - business_sector (Industry Name - Determine the sector this business operates in, such as "NBFC", "MFI","OTHERS", "STATE GUARANTEED","BANKING", PSU", "HFC", "INVIT", "SME". Example: "ECL FINANCE LIMITED" → "NBFC)
     - maturityDate (Format - dd/mm/yyyy)
 
 Input text: {text}
